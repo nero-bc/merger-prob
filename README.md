@@ -2,44 +2,25 @@
 ### PR's Welcomed
 <br>
 
-![GitHub Repo stars](https://img.shields.io/github/stars/yashoswalyo/MERGE-BOT?color=blue&style=flat)
-![GitHub forks](https://img.shields.io/github/forks/yashoswalyo/MERGE-BOT?color=green&style=flat)
-![GitHub issues](https://img.shields.io/github/issues/yashoswalyo/MERGE-BOT)
-![GitHub closed issues](https://img.shields.io/github/issues-closed/yashoswalyo/MERGE-BOT)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/yashoswalyo/MERGE-BOT)
-![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/yashoswalyo/MERGE-BOT)
-![GitHub contributors](https://img.shields.io/github/contributors/yashoswalyo/MERGE-BOT?style=flat)
-![GitHub repo size](https://img.shields.io/github/repo-size/yashoswalyo/MERGE-BOT?color=red)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/yashoswalyo/MERGE-BOT)
+![GitHub Repo stars](https://img.shields.io/github/stars/viro-net/merger-pro?color=blue&style=flat)
+![GitHub forks](https://img.shields.io/github/forks/viro-net/merger-pro?color=green&style=flat)
+![GitHub issues](https://img.shields.io/github/issues/viro-net/merger-pro)
+![GitHub closed issues](https://img.shields.io/github/issues-closed/viro-net/merger-pro)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/viro-net/merger-pro)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/viro-net/merger-pro)
+![GitHub contributors](https://img.shields.io/github/contributors/viro-net/merger-pro?style=flat)
+![GitHub repo size](https://img.shields.io/github/repo-size/viro-net/merger-pro?color=red)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/viro-net/merger-pro)
 
-An Telegram Bot By [Yash Oswal](https://t.me/yashoswalyo) To Merge multiple Videos in Telegram into single video. <br>
-Bugs should be reported at: [Telegram Group](https://t.me/yo_codes_support)
+An Telegram Bot By [StupidBoi69](https://t.me/StupidBoi69) To Merge multiple Videos in Telegram into single video. <br>
+Bugs should be reported at: [Telegram Group](https://t.me/)
 
-```diff
-- TODO's:
-+ Add ability to edit metadata of exported video
 
-- FEATURES:
-+ (new) Option to add multiple audio tracks to telegram video
-+ (new) Option to add multiple subtitles to telegram video
-+ Upload Files to Drive (Send your rclone config to bot)
-#  1. Send your rclone config to bot.
-#  2. Then send videos to merge, after you tap "Merge Now", upload to drive option will available.
-+ Merged video preserves all streams of the first video you send (i.e. all audiotracks/subtitles)
-
-+ Merge Upto 10 videos in one 
-+ Upload as document/video 
-+ Custom thumbnail support
-+ Users can login to bot using password
-+ Owner can broadcast message to all users
-+ Log Channel to store all merged videos
-
-```
 ## Deploy Tutorial : 
 [![Watch the video](https://img.youtube.com/vi/H-xVk_4zccs/hqdefault.jpg)](https://youtu.be/H-xVk_4zccs)
 
 ## Deploy(at your own risk) :
-<p><a href="https://heroku.com/deploy?template=https://github.com/nero-bc/MERGE-BOT"><img src="https://img.shields.io/badge/Deploy%20To%20Heroku-blueviolet?style=for-the-badge&logo=heroku" width="200""/></a></p>
+<p><a href="https://heroku.com/deploy?template=https://github.com/viro-net/merger-pro"><img src="https://img.shields.io/badge/Deploy%20To%20Heroku-blueviolet?style=for-the-badge&logo=heroku" width="200""/></a></p>
 
 ### OR
 Goto `settings > actions > secret > New Repository Secret` <br>
