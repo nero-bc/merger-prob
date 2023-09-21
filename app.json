@@ -7,7 +7,7 @@
 		"merge",
 		"bot"
 	],
-	"repository": "https://github.com/viro-net/merger-pro",
+	"repository": "https://github.com/nero-bc/merger-pro",
 	"website": "https://telegram.dog/yashoswalyo",
 	"stack": "container",
 	"env": {
