@@ -59,7 +59,7 @@ collection = dkb["tokens"]
 
 def shorten_url(url):
     # SHORTNER KA API AND URL 
-    resp = requests.get(f'https://shortnerfly.com/api?api=6d7f51391c33fde134582ce9245150af1c6c6412&url={url}').json()
+    resp = requests.get(f'https://atglinks.com/api?api=b7b566f8bb9e71a4396a935e260ae9b4f01597a4&url={url}').json()
     if resp['status'] == 'success':
         SHORT_LINK = resp['shortenedUrl']
     return SHORT_LINK
