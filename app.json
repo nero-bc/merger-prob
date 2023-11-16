@@ -1,18 +1,18 @@
 {
 	"name": "Telegram Video Merge Bot",
-	"description": "A Telegram Video Merge Bot in Pyrogram by @StupidBoi69",
+	"description": "A Telegram Video Merge Bot in Pyrogram by @YashOswalYO",
 	"keywords": [
 		"telegram",
 		"video",
 		"merge",
 		"bot"
 	],
-	"repository": "https://github.com/nero-bc/merger-pro",
+	"repository": "https://github.com/nero-bc/merger-prob",
 	"website": "https://telegram.dog/yashoswalyo",
 	"stack": "container",
 	"env": {
 		"CONFIG_FILE_URL": {
-			"description": "Make Config on gist and paste raw link "
+			"description": "Make Config on gist and paste raw link", "required": false
 		}
 	},
 	"formation": {
