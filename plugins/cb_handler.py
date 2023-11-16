@@ -35,22 +35,20 @@ async def callback_handler(c: Client, cb: CallbackQuery):
     # async def cb_handler(c: Client, cb: CallbackQuery):
     if cb.data == "merge":
         await cb.message.edit(
-            text="🛂 Where Do You Want To Upload?",
+            text="Where Do You Want To Upload?",
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton(
-                            "♿ To Telegram", callback_data="to_telegram"
-                        ),
-                        InlineKeyboardButton("♿ To Drive", callback_data="to_drive"),
+                        InlineKeyboardButton("To Telegram", callback_data="to_telegram"),
+                        InlineKeyboardButton("To Drive", callback_data="to_drive"),
                     ],
-                    [InlineKeyboardButton("🚮 Cancel 🚮", callback_data="cancel")],
+                    [InlineKeyboardButton("Cancel", callback_data="cancel")],
                 ]
             ),
         )
         return
-
-    elif cb.data == "to_drive":
+        
+elif cb.data == "to_drive":
         try:
             urc = await database.getUserRcloneConfig(cb.from_user.id)
             await c.download_media(
@@ -68,14 +66,12 @@ async def callback_handler(c: Client, cb: CallbackQuery):
             return
         UPLOAD_TO_DRIVE.update({f"{cb.from_user.id}": True})
         await cb.message.edit(
-            text="♿ Okay I'll Upload To Drive\n🛂 Do You Want To Rename? Default File Name Is **[@AnimeDownloaderChat_Bot]_merged.mkv**",
+            text="Okay I'll upload to drive\nDo you want to rename? Default file name is **[@JAsuranserials]_Merged.mkv**",
             reply_markup=InlineKeyboardMarkup(
                 [
-                    [
-                        InlineKeyboardButton("🚼 Default 🚼", callback_data="rename_NO"),
-                        InlineKeyboardButton("🛂 Rename 🛂", callback_data="rename_YES"),
-                    ],
-                    [InlineKeyboardButton("🚮 Cancel 🚮", callback_data="cancel")],
+                    [InlineKeyboardButton("Default", callback_data="rename_NO")],
+                    [InlineKeyboardButton("Rename", callback_data="rename_YES")],
+                    [InlineKeyboardButton("Cancel", callback_data="cancel")],
                 ]
             ),
         )
@@ -84,14 +80,14 @@ async def callback_handler(c: Client, cb: CallbackQuery):
     elif cb.data == "to_telegram":
         UPLOAD_TO_DRIVE.update({f"{cb.from_user.id}": False})
         await cb.message.edit(
-            text="♿ How Do Yo Want To Upload File",
+            text="How do yo want to upload file",
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("📽️ Video", callback_data="video"),
-                        InlineKeyboardButton("🗃️ File", callback_data="document"),
+                        InlineKeyboardButton("Video", callback_data="video"),
+                        InlineKeyboardButton("File", callback_data="document"),
                     ],
-                    [InlineKeyboardButton("🚮 Cancel 🚮", callback_data="cancel")],
+                    [InlineKeyboardButton("Cancel", callback_data="cancel")],
                 ]
             ),
         )
@@ -100,14 +96,12 @@ async def callback_handler(c: Client, cb: CallbackQuery):
     elif cb.data == "document":
         UPLOAD_AS_DOC.update({f"{cb.from_user.id}": True})
         await cb.message.edit(
-            text="🚮 Do You Want To Rename?\n🛂 Default File Name Is **[@AnimeDownloaderChat_Bot]_merged.mkv**",
+            text="Do you want to rename? Default file name is **@Anime_DownLord.mkv**",
             reply_markup=InlineKeyboardMarkup(
                 [
-                    [
-                        InlineKeyboardButton("🚼 Default 🚼", callback_data="rename_NO"),
-                        InlineKeyboardButton("🛂 Rename 🛂", callback_data="rename_YES"),
-                    ],
-                    [InlineKeyboardButton("🚮 Cancel 🚮", callback_data="cancel")],
+                    [InlineKeyboardButton("Default", callback_data="rename_NO")],
+                    [InlineKeyboardButton("Rename", callback_data="rename_YES")],
+                    [InlineKeyboardButton("Cancel", callback_data="cancel")],
                 ]
             ),
         )
@@ -116,14 +110,12 @@ async def callback_handler(c: Client, cb: CallbackQuery):
     elif cb.data == "video":
         UPLOAD_AS_DOC.update({f"{cb.from_user.id}": False})
         await cb.message.edit(
-            text="🚮 Do You Want To Rename?\n🛂 Default File Name Is **[@AnimeDownloaderChat_Bot]_merged.mkv**",
+            text="Do you want to rename? Default file name is **@Anime_DownLord.mkv**",
             reply_markup=InlineKeyboardMarkup(
                 [
-                    [
-                        InlineKeyboardButton("🚼 Default 🚼", callback_data="rename_NO"),
-                        InlineKeyboardButton("🛂 Rename 🛂", callback_data="rename_YES"),
-                    ],
-                    [InlineKeyboardButton("🚮 Cancel 🚮", callback_data="cancel")],
+                    [InlineKeyboardButton("Default", callback_data="rename_NO")],
+                    [InlineKeyboardButton("Rename", callback_data="rename_YES")],
+                    [InlineKeyboardButton("Cancel", callback_data="cancel")],
                 ]
             ),
         )
@@ -146,7 +138,7 @@ async def callback_handler(c: Client, cb: CallbackQuery):
         user = UserSettings(cb.from_user.id, cb.from_user.first_name)
         if "YES" in cb.data:
             await cb.message.edit(
-                "Current filename: **[@AnimeDownloaderChat_Bot]_merged.mkv**\n\nSend me new file name without extension: You have 1 minute"
+                "Current filename: **@Anime_DownLord.mkv**\n\nSend me new file name without extension: You have 1 minute"
             )
             res: Message = await c.listen(
                 (cb.message.chat.id,None,None), filters=filters.text, timeout=150
@@ -164,7 +156,7 @@ async def callback_handler(c: Client, cb: CallbackQuery):
             return
         if "NO" in cb.data:
             new_file_name = (
-                f"downloads/{str(cb.from_user.id)}/[@AnimeDownloaderChat_Bot]_merged.mkv"
+                f"downloads/{str(cb.from_user.id)}/@Anime_DownLord.mkv"
             )
             if user.merge_mode == 1:
                 await mergeNow(c, cb, new_file_name)
@@ -193,7 +185,7 @@ async def callback_handler(c: Client, cb: CallbackQuery):
         else:
             await c.answer_callback_query(
                 callback_query_id=cb.id,
-                text="⚠️ Opps ⚠️ \n I Got a False Visitor 🚸 !! \n\n 📛 Stay At Your Limits !!📛",
+                text="Opps\n I Got a False Visitor!\n\nStay At Your Limits !",
                 show_alert=True,
                 cache_time=0,
             )
@@ -225,15 +217,15 @@ async def callback_handler(c: Client, cb: CallbackQuery):
                         [
                             [
                                 InlineKeyboardButton(
-                                    "🚮 Remove",
+                                    "Remove",
                                     callback_data=f"removeFile_{str(m.id)}",
                                 ),
                                 InlineKeyboardButton(
-                                    "🛂 Add Subtitle",
+                                    "Add Subtitle",
                                     callback_data=f"addSub_{str(sIndex)}",
                                 ),
                             ],
-                            [InlineKeyboardButton("🔙 Back", callback_data="back")],
+                            [InlineKeyboardButton("Back", callback_data="back")],
                         ]
                     ),
                 )
@@ -244,15 +236,15 @@ async def callback_handler(c: Client, cb: CallbackQuery):
                         [
                             [
                                 InlineKeyboardButton(
-                                    "🚮 Remove",
+                                    "Remove",
                                     callback_data=f"removeFile_{str(m.id)}",
                                 ),
                                 InlineKeyboardButton(
-                                    "🛂 Add Subtitle",
+                                    "Add Subtitle",
                                     callback_data=f"addSub_{str(sIndex)}",
                                 ),
                             ],
-                            [InlineKeyboardButton("♿ Back", callback_data="back")],
+                            [InlineKeyboardButton("Back", callback_data="back")],
                         ]
                     ),
                 )
@@ -267,15 +259,15 @@ async def callback_handler(c: Client, cb: CallbackQuery):
                         [
                             [
                                 InlineKeyboardButton(
-                                    "🚮 Remove File",
+                                    "Remove File",
                                     callback_data=f"removeFile_{str(m.id)}",
                                 ),
                                 InlineKeyboardButton(
-                                    "🚮 Remove Subtitle",
+                                    "Remove Subtitle",
                                     callback_data=f"removeSub_{str(sIndex)}",
                                 ),
                             ],
-                            [InlineKeyboardButton("♿ Back", callback_data="back")],
+                            [InlineKeyboardButton("Back", callback_data="back")],
                         ]
                     ),
                 )
@@ -286,15 +278,15 @@ async def callback_handler(c: Client, cb: CallbackQuery):
                         [
                             [
                                 InlineKeyboardButton(
-                                    "🚮 Remove File",
+                                    "Remove File",
                                     callback_data=f"removeFile_{str(m.id)}",
                                 ),
                                 InlineKeyboardButton(
-                                    "🚮 Remove Subtitle",
+                                    "Remove Subtitle",
                                     callback_data=f"removeSub_{str(sIndex)}",
                                 ),
                             ],
-                            [InlineKeyboardButton("♿ Back", callback_data="back")],
+                            [InlineKeyboardButton("Back", callback_data="back")],
                         ]
                     ),
                 )
@@ -304,30 +296,30 @@ async def callback_handler(c: Client, cb: CallbackQuery):
         sIndex = int(cb.data.split(sep="_")[1])
         vMessId = queueDB.get(cb.from_user.id)["videos"][sIndex]
         rmess = await cb.message.edit(
-            text=f"**🛂 Send Me A Subtitle File, You Have Only 59 Seconds**",
+            text=f"Send me a subtitle file, you have 1 minute",
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
                         InlineKeyboardButton(
-                            "♿ Back", callback_data=f"showFileName_{vMessId}"
+                            "Back", callback_data=f"showFileName_{vMessId}"
                         )
                     ]
                 ]
             ),
         )
         subs: Message = await c.listen(
-            (cb.message.chat.id,None,None), filters="filters.document", timeout=60
+            (cb.message.chat.id,None,None), filters="filterss.document", timeout=60
         )
         if subs is not None:
             media = subs.document or subs.video
             if media.file_name.rsplit(".")[-1] not in "srt":
                 await subs.reply_text(
-                    text=f"♿ Please Go Back First",
+                    text=f"Please go back first",
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
                                 InlineKeyboardButton(
-                                    "♿ Back", callback_data=f"showFileName_{vMessId}"
+                                    "Back", callback_data=f"showFileName_{vMessId}"
                                 )
                             ]
                         ]
@@ -342,7 +334,7 @@ async def callback_handler(c: Client, cb: CallbackQuery):
                     [
                         [
                             InlineKeyboardButton(
-                                "♿ Back", callback_data=f"showFileName_{vMessId}"
+                                "Back", callback_data=f"showFileName_{vMessId}"
                             )
                         ]
                     ]
@@ -358,18 +350,18 @@ async def callback_handler(c: Client, cb: CallbackQuery):
         vMessId = queueDB.get(cb.from_user.id)["videos"][sIndex]
         queueDB.get(cb.from_user.id)["subtitles"][sIndex] = None
         await cb.message.edit(
-            text=f"**🛂 Subtitle Removed Now Go Back Or Send Next Video**",
+            text=f"Subtitle Removed Now go back or send next video",
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
                         InlineKeyboardButton(
-                            "♿ Back", callback_data=f"showFileName_{vMessId}"
+                            "Back", callback_data=f"showFileName_{vMessId}"
                         )
                     ]
                 ]
             ),
         )
-        LOGGER.info("♿ Sub Removed From List")
+        LOGGER.info("Sub removed from list")
         return
 
     elif cb.data == "back":
@@ -396,7 +388,7 @@ async def callback_handler(c: Client, cb: CallbackQuery):
         return
 
     elif cb.data == "tryotherbutton":
-        await cb.answer(text="♿ Try Other Button")
+        await cb.answer(text="Try other button ☛")
         return
 
     elif cb.data.startswith("toggleEdit_"):
