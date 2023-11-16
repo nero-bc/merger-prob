@@ -2,6 +2,7 @@ import asyncio
 import os
 import time
 
+# Importing necessary modules and functions from your bot
 from bot import (
     LOGGER,
     SUBTITLE_EXTENSIONS,
@@ -32,93 +33,113 @@ from pyrogram.types import CallbackQuery, Message
 async def mergeSub(c: Client, cb: CallbackQuery, new_file_name: str):
     omess = cb.message.reply_to_message
     vid_list = list()
-    await cb.message.edit("🛂 Processing...")
+    # Update the status message
+    await cb.message.edit("**Processing...**")
     duration = 0
     video_mess = queueDB.get(cb.from_user.id)["videos"][0]
     list_message_ids: list = queueDB.get(cb.from_user.id)["subtitles"]
     list_message_ids.insert(0, video_mess)
     list_message_ids.sort()
+
+    # Check if the subtitle queue is empty
     if list_message_ids is None:
-        await cb.answer("Queue Empty", show_alert=True)
+        await cb.answer("**Queue Empty**", show_alert=True)
         await cb.message.delete(True)
         return
+
+    # Create a directory to store downloaded files
     if not os.path.exists(f"downloads/{str(cb.from_user.id)}/"):
         os.makedirs(f"downloads/{str(cb.from_user.id)}/")
+
     msgs: list[Message] = await c.get_messages(
         chat_id=cb.from_user.id, message_ids=list_message_ids
     )
     all = len(msgs)
-    n=1
+    n = 1
+    # Iterate through each subtitle message and download the file
     for i in msgs:
         media = i.video or i.document
-        await cb.message.edit(f"🛂 Starting Download Of ... `{media.file_name}`")
-        LOGGER.info(f"🛂 Starting Download Of ... {media.file_name}")
+        await cb.message.edit(f"**Starting Download Of...\n{media.file_name}**")
+        LOGGER.info(f"**Starting Download Of...\n{media.file_name}**")
+
+        # Determine the file name based on the extension
         currentFileNameExt = media.file_name.rsplit(sep=".")[-1].lower()
         if currentFileNameExt in VIDEO_EXTENSIONS:
             tmpFileName = "vid.mkv"
         elif currentFileNameExt in SUBTITLE_EXTENSIONS:
             tmpFileName = "sub." + currentFileNameExt
+
         await asyncio.sleep(5)
         file_dl_path = None
         try:
             c_time = time.time()
+            # Display progress while downloading
             prog = Progress(cb.from_user.id, c, cb.message)
             file_dl_path = await c.download_media(
                 message=media,
                 file_name=f"downloads/{str(cb.from_user.id)}/{str(i.id)}/{tmpFileName}",
                 progress=prog.progress_for_pyrogram,
-                progress_args=(f"🛂 Downloading: `{media.file_name}`", c_time,f"\n**Downloading: {n}/{all}**"),
+                progress_args=(f"**Downloading:\n{media.file_name}**", c_time, f"**Downloading: {n}/{all}**"),
             )
-            n+=1
+            n += 1
+            # Check if the download process is interrupted
             if gDict[cb.message.chat.id] and cb.message.id in gDict[cb.message.chat.id]:
                 return
-            await cb.message.edit(f"🛂 Downloaded Sucessfully ... `{media.file_name}`")
-            LOGGER.info(f"Downloaded Sucessfully ... {media.file_name}")
+            await cb.message.edit(f"**Downloaded Successfully...\n{media.file_name}**")
+            LOGGER.info(f"**Downloaded Successfully...\n{media.file_name}**")
             await asyncio.sleep(5)
         except Exception as downloadErr:
-            LOGGER.warning(f"🚮 Failed To Download Error: {downloadErr}")
+            LOGGER.warning(f"**Failed To Download Error:\n{downloadErr}**")
+            # Remove the failed subtitle from the queue
             queueDB.get(cb.from_user.id)["subtitles"].remove(i.id)
-            await cb.message.edit("🛃 File Skipped!")
+            await cb.message.edit("**File Skipped!**")
             await asyncio.sleep(4)
             await cb.message.delete(True)
             continue
         vid_list.append(f"{file_dl_path}")
 
+    # Merge the subtitles with the video
     subbed_video = MergeSubNew(
         filePath=vid_list[0],
         subPath=vid_list[1],
         user_id=cb.from_user.id,
         file_list=vid_list,
     )
-    _cache = list()
+
+    # Handle failed subtitle merging
     if subbed_video is None:
-        await cb.message.edit("🚮 Failed To Add Subs Video !")
+        await cb.message.edit("**Failed To Add Subs Video !**")
         await delete_all(root=f"downloads/{str(cb.from_user.id)}")
         queueDB.update({cb.from_user.id: {"videos": [], "subtitles": [], "audios": []}})
         formatDB.update({cb.from_user.id: None})
         return
+
     try:
-        await cb.message.edit("🛅 Sucessfully Muxed Video !")
+        await cb.message.edit("**Successfully Muxed Video !**")
     except MessageNotModified:
-        await cb.message.edit("🛅 Sucessfully Muxed Video !")
-    LOGGER.info(f"Video muxed for: {cb.from_user.first_name} ")
+        await cb.message.edit("**Successfully Muxed Video !**")
+    LOGGER.info(f"**Video muxed for: {cb.from_user.first_name}** ")
     await asyncio.sleep(3)
     file_size = os.path.getsize(subbed_video)
     os.rename(subbed_video, new_file_name)
     await cb.message.edit(
-        f"♿ Renaming Video To\n **{new_file_name.rsplit('/',1)[-1]}**"
+        f"**Renaming Video To\n {new_file_name.rsplit('/',1)[-1]}**"
     )
     await asyncio.sleep(3)
     merged_video_path = new_file_name
+
+    # Upload the merged video to Google Drive if configured
     if UPLOAD_TO_DRIVE[f"{cb.from_user.id}"]:
         await rclone_driver(omess, cb, merged_video_path)
         await delete_all(root=f"downloads/{str(cb.from_user.id)}")
         queueDB.update({cb.from_user.id: {"videos": [], "subtitles": [], "audios": []}})
         formatDB.update({cb.from_user.id: None})
         return
+
+    # Handle file size restrictions for non-premium users
     if file_size > 2044723200 and Config.IS_PREMIUM == False:
         await cb.message.edit(
-            f"♿ Video Is Larger Than 2GB Can't Upload,\n\n Tell {Config.OWNER_USERNAME} To Add Premium Account To Get 4GB TG Uploads"
+            f"**Video Is Larger Than 2GB Can't Upload,\n\nTell {Config.OWNER_USERNAME} To Add Premium Account For 4GB TG Uploads**"
         )
         await delete_all(root=f"downloads/{str(cb.from_user.id)}")
         queueDB.update({cb.from_user.id: {"videos": [], "subtitles": [], "audios": []}})
@@ -126,13 +147,13 @@ async def mergeSub(c: Client, cb: CallbackQuery, new_file_name: str):
         return
     if Config.IS_PREMIUM and file_size > 4241280205:
         await cb.message.edit(
-            f"♿ Video is Larger Than 4GB Can't Upload,\n\n Tell {Config.OWNER_USERNAME} To Die With Premium Account"
+            "**Video Is Larger Than 4GB Can't Upload,\n\nTell {Config.OWNER_USERNAME} To Die With Premium Account**"
         )
         await delete_all(root=f"downloads/{str(cb.from_user.id)}")
         queueDB.update({cb.from_user.id: {"videos": [], "subtitles": [], "audios": []}})
         formatDB.update({cb.from_user.id: None})
         return
-    await cb.message.edit("🛃 Extracting Video Data ...")
+    await cb.message.edit("**Extracting Video Data...**")
 
     duration = 1
     try:
@@ -143,21 +164,24 @@ async def mergeSub(c: Client, cb: CallbackQuery, new_file_name: str):
         await delete_all(root=f"downloads/{str(cb.from_user.id)}")
         queueDB.update({cb.from_user.id: {"videos": [], "subtitles": [], "audios": []}})
         formatDB.update({cb.from_user.id: None})
-        await cb.message.edit("🚮 Merged Video Is Corrupted")
+        await cb.message.edit("**Merged Video Is Corrupted**")
         return
+
+    # Download or generate video thumbnail
     try:
         user = UserSettings(cb.from_user.id, cb.from_user.first_name)
         thumb_id = user.thumbnail
         if thumb_id is None:
             raise Exception
-        # thumb_id = await database.getThumb(cb.from_user.id)
         video_thumbnail = f"downloads/{str(cb.from_user.id)}_thumb.jpg"
         await c.download_media(message=str(thumb_id), file_name=video_thumbnail)
     except Exception as err:
-        LOGGER.info("Generating thumb")
+        LOGGER.info("**Generating thumb**")
         video_thumbnail = await take_screen_shot(
             merged_video_path, f"downloads/{str(cb.from_user.id)}", (duration / 2)
         )
+
+    # Set default width and height
     width = 1280
     height = 720
     try:
@@ -176,9 +200,11 @@ async def mergeSub(c: Client, cb: CallbackQuery, new_file_name: str):
         queueDB.update({cb.from_user.id: {"videos": [], "subtitles": [], "audios": []}})
         formatDB.update({cb.from_user.id: None})
         await cb.message.edit(
-            "🛃 Merged Video Is Corrupted \n\n<i>Try Setting Custom Thumbnail</i>",
+            "**Merged Video Is Corrupted**\n\n**Try Setting Custom Thumbnail**",
         )
         return
+
+    # Upload the video to Telegram
     await uploadVideo(
         c=c,
         cb=cb,
@@ -190,6 +216,8 @@ async def mergeSub(c: Client, cb: CallbackQuery, new_file_name: str):
         file_size=os.path.getsize(merged_video_path),
         upload_mode=UPLOAD_AS_DOC[f"{cb.from_user.id}"],
     )
+
+    # Delete temporary files and reset the user's queue
     await cb.message.delete(True)
     await delete_all(root=f"downloads/{str(cb.from_user.id)}")
     queueDB.update({cb.from_user.id: {"videos": [], "subtitles": [], "audios": []}})
