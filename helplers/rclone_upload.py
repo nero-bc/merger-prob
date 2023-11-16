@@ -69,7 +69,7 @@ class RCUploadTask(Status):
         nstr = nstr.split(",")
         prg = nstr[1].strip("% ")
         prg = "Progress:- {} - {}%".format(self.progress_bar(prg), prg)
-        progress = "<b>Uploaded:- {} \n{} \nSpeed:- {} \nETA:- {}</b> \n<b>Using Engine:- </b><code>RCLONE</code>".format(
+        progress = "<b>Uploaded:- {}\n{}\nSpeed:- {}\nETA:- {}</b>\n<b>Using Engine:- </b><code>RCLONE</code>".format(
             nstr[0], prg, nstr[2], nstr[3].replace("ETA", "")
         )
         return progress
@@ -185,7 +185,7 @@ async def rclone_upload(
         rclonePr, edTime, msg, mess, userMess, task
     )
     if rcloneResult is False:
-        await mess.edit(f"{mess.text} \n Canceled Rclone Upload")
+        await mess.edit(f"{mess.text}\nCanceled Rclone Upload")
         await msg.delete()
         rclonePr.kill()
         task.cancel = True
