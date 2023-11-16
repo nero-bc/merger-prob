@@ -66,7 +66,7 @@ elif cb.data == "to_drive":
             return
         UPLOAD_TO_DRIVE.update({f"{cb.from_user.id}": True})
         await cb.message.edit(
-            text="Okay I'll upload to drive\nDo you want to rename? Default file name is **[@JAsuranserials]_Merged.mkv**",
+            text="Okay I'll upload to drive\nDo you want to rename? Default file name is **@Anime_DownLord.mkv**",
             reply_markup=InlineKeyboardMarkup(
                 [
                     [InlineKeyboardButton("Default", callback_data="rename_NO")],
